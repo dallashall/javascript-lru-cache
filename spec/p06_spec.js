@@ -99,6 +99,4 @@ describe('LinkedList', () => {
       expect(listKeysPassedToCallback).toEqual(listKeys);
     });
   });
-
-  
 });
