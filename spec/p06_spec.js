@@ -1,19 +1,20 @@
+const { LinkedList } = require('../lib/p06_linked_list');
+
 describe('LinkedList', () => {
-  const LinkedList = require('../lib/p06_linked_list');
   let list;
   let emptyList;
-  let keyValPairs = {
+  const keyValPairs = {
     first: 1,
     second: 2,
-    third: 3
+    third: 3,
   };
 
   beforeEach(() => {
     emptyList = new LinkedList();
     list = new LinkedList();
-    Object.keys.forEach(key => {
-      list.append(key, keyValPairs[key]);
-    });
+    Object.keys(keyValPairs).forEach(key => (
+      list.append(key, keyValPairs[key])
+    ));
   });
 
   describe('LinkedList.prototype.empty', () => {
@@ -26,6 +27,7 @@ describe('LinkedList', () => {
   describe('LinkedList.prototype.append', () => {
     it('appends nodes', () => {
       emptyList.append('first', 1);
+
       expect(emptyList.empty()).toBeFalsy();
     });
 
@@ -35,16 +37,13 @@ describe('LinkedList', () => {
     });
   });
 
-  describe('LinkedList.prototype.update', () => {
-    it('updates nodes', () => {
-      emptyList.append('first', 1);
-      emptyList.update('first', 2);
-      expect(emptyList.first().val).toBe(2);
+  describe('LinkedList.prototype.include', () => {
+    it('returns true if a key is present', () => {
+      expect(list.include('first')).toBeTruthy();
     });
 
-    it('does not add new nodes', () => {
-      emptyList.update('first', 2);
-      expect(emptyList.empty()).toBeFalsy();
+    it('returns false if a key is not in the list', () => {
+      expect(list.include('fourth')).toBeFalsy();
     });
   });
 
@@ -60,36 +59,44 @@ describe('LinkedList', () => {
     });
   });
 
+  describe('LinkedList.prototype.update', () => {
+    it('updates nodes', () => {
+      emptyList.append('first', 1);
+      emptyList.update('first', 2);
+
+      expect(emptyList.first().val).toBe(2);
+    });
+
+    it('does not add new nodes', () => {
+      emptyList.update('first', 2);
+
+      expect(emptyList.empty()).toBeTruthy();
+    });
+  });
+
   describe('LinkedList.prototype.remove', () => {
     it('removes a node by key', () => {
       expect(list.get('first')).toBe(1);
       list.remove('first');
+
       expect(list.get('first')).toBe(null);
     });
 
     it('reassigns pointers when nodes are removed', () => {
       list.remove('second');
+
       expect(list.first().next.key).toBe('third');
       expect(list.last().prev.key).toBe('first');
     });
   });
 
-  describe('LinkedList.prototype.include', () => {
-    it('returns true if a key is present', () => {
-      expect(list.include('first')).toBeTruthy();
-    });
-
-    it('returns false if a key is not in the list', () => {
-      expect(list.include('fourth')).toBeFalsy();
-    });
-  });
-
-  describe('LinkedList.prototyp.forEach', () => {
+  describe('LinkedList.prototype.forEach', () => {
     it('enumerates over the nodes and passes each node to the callback', () => {
       const listKeys = Object.values(keyValPairs);
       const listKeysPassedToCallback = [];
       list.forEach(node => listKeysPassedToCallback.push(node.val));
-      expect(listKeysPassedToCallback).toMatch(listKeys);
+
+      expect(listKeysPassedToCallback).toEqual(listKeys);
     });
   });
 
